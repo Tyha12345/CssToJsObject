@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <link rel="icon" type="image/png" href="https://i.ibb.co/162XQbK/file-type-css.png" />
+    <title>Css to Js object</title>
+    <style>
+      *:focus {
+        outline: none;
+      }
+      body {
+        font-family: Arial;
+        margin: 0;
+        padding: 20px;
+        background-color: #f7f7f7;
+        text-align: center;
+      }
+      p {
+        color: #333;
+        margin: 0;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+      .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 200px;
+        padding: 10px;
+        font-family: Arial;
+        font-size: 16px;
+        border: 0px solid black;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        box-sizing: border-box;
+        resize: vertical;
+      }
+      .container textarea {
+        flex: 1;
+      }
+      @media (max-width: 500px) {
+        .container {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p>Css to Js object</p>
+    <div class="container">
+      <textarea
+        id="CssInput"
+        placeholder="Enter your Css here"
+        oninput="convertCssToJs()"
+      ></textarea>
+      <textarea id="jsOutput" readonly></textarea>
+    </div>
+
+    <script>
+      function convertCssToJs() {
+        const CssInput = document.getElementById("CssInput").value
+        const jsOutput = document.getElementById("jsOutput")
+
+        const CssToJsObject = (Css) => {
+          const lines = Css.split("\n")
+          let jsObjectString = ""
+
+          lines.forEach((line) => {
+            if (line.trim()) {
+              let [property, value] = line.split(":")
+              if (property && value) {
+                // Convert property to camelCase
+                property = property
+                  .trim()
+                  .replace(/-([a-z])/g, (g) => g[1].toUpperCase())
+                  
+
+                // convert value to string or number
+                value = value.trim()
+                if (value[value.length - 1] === ";") {
+                  value = value.slice(0, -1)
+                }
+
+                const nonDigitPattern = /[\D]+/i
+                const formattedValue = nonDigitPattern.test(value)
+                  ? `"${value}"`
+                  : value
+
+                // Append to the result string
+                jsObjectString += `  ${property}: ${formattedValue},\n`
+              }
+            }
+          })
+
+          return jsObjectString
+        }
+
+        jsOutput.value = CssToJsObject(CssInput)
+      }
+    </script>
+  </body>
+</html>
